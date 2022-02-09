@@ -11,15 +11,36 @@ def index():
     return "<h1>HELLO Flask</h1>"
 
 # 設定した起きる時間を取得
-@app.route("/timer",methods=["GET"])
+@app.route("/get_timer",methods=["GET"])
 def get_timer():
     name = request.args.get("user")
     with open(file,mode="r") as f:
         d = json.load(f)
     return jsonify(d[name]["timer"])
 
-# 寝た時間を記録
-@app.route("/sleep_time",methods=["POST"])
+# 設定した起きる時間を変更
+@app.route("/put_timer", methods=["PUT"])
+def put_timer():
+    user = request.args.get("user")
+    week = request.args.get("week")
+    time = request.args.get("time")
+    with open(file,mode="r") as f:
+        d = json.load(f)
+    d[user]["timer"][week] = time
+    with open(file,mode="w") as f:
+        json.dump(d,f,indent=2)
+    return jsonify({"name":user, week:time})
+
+# 今までの睡眠時間を確認
+@app.route("/get_sleep_time", methods=["GET"])
+def get_sleep_time():
+    name = request.args.get("user")
+    with open(file,mode="r") as f:
+        d = json.load(f)
+    return jsonify(d[name]["sleep_times"])
+
+# 今までの睡眠時間を記録
+@app.route("/post_sleep_time",methods=["POST"])
 def post_sleep_time():
     j = request.get_json()
     time = j["time"]
