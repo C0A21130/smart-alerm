@@ -4,6 +4,7 @@ import datetime
 
 app = Flask(__name__)
 file = "./data/data.json"
+week = ["1sun","2mon","3tue","4wen","5thu","6fry","7sat"]
 
 # テストページ
 @app.route("/")
@@ -22,14 +23,17 @@ def get_timer():
 @app.route("/put_timer", methods=["PUT"])
 def put_timer():
     user = request.args.get("user")
-    week = request.args.get("week")
-    time = request.args.get("time")
+    j = request.get_json()
+    time = j["time"]
+    timer = dict(zip(week, time))
+    # week = request.args.get("week")
+    # time = request.args.get("time")
     with open(file,mode="r") as f:
         d = json.load(f)
-    d[user]["timer"][week] = time
+    d[user]["timer"]= timer
     with open(file,mode="w") as f:
         json.dump(d,f,indent=2)
-    return jsonify({"name":user, week:time})
+    return jsonify({"name":user,"week":timer})
 
 # 今までの睡眠時間を確認
 @app.route("/get_sleep_time", methods=["GET"])
@@ -62,7 +66,6 @@ def post_account():
     user = j["user"]
     time = j["time"]
     mail = j["mail"]
-    week = ["sun","mon", "tue", "wen", "thu", "fry", "sat"]
     timer = dict(zip(week, time))
     new = {
     user: 
