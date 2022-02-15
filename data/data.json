@@ -2,13 +2,13 @@
   "name": {
     "address": "example@mail",
     "timer": {
-      "1sun": 700,
-      "2mon": 700,
-      "3tue": 700,
-      "4wen": 700,
-      "5thu": 700,
-      "6fry": 700,
-      "7sat": 700
+      "sun": 500,
+      "mon": 500,
+      "tue": 500,
+      "wen": 500,
+      "thu": 500,
+      "fry": 500,
+      "sat": 500
     },
     "sleep_times": {
       "9999/13/00": 100,

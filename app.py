@@ -4,7 +4,7 @@ import datetime
 
 app = Flask(__name__)
 file = "./data/data.json"
-week = ["1sun","2mon","3tue","4wen","5thu","6fry","7sat"]
+week = ["sun","mon","tue","wen","thu","fry","sat"]
 
 # テストページ
 @app.route("/")
@@ -26,8 +26,6 @@ def put_timer():
     j = request.get_json()
     time = j["time"]
     timer = dict(zip(week, time))
-    # week = request.args.get("week")
-    # time = request.args.get("time")
     with open(file,mode="r") as f:
         d = json.load(f)
     d[user]["timer"]= timer
@@ -48,12 +46,16 @@ def get_sleep_time():
 def post_sleep_time():
     j = request.get_json()
     time = j["time"]
+    time = int(time)
     user = j["user"]
     dt = datetime.datetime.now()
     today = f"{dt.year}/{dt.month}/{dt.day}"
 
     with open(file,mode="r") as f:
         d = json.load(f)
+    if (today in d[user]["sleep_times"]):
+        t = d[user]["sleep_times"][today]
+        time+=t
     d[user]["sleep_times"][today] = time
     with open(file,mode="w") as f:
         json.dump(d,f,indent=2)
