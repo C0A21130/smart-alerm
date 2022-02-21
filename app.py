@@ -4,7 +4,7 @@ import datetime
 
 app = Flask(__name__)
 file = "./data/data.json"
-week = ["sun","mon","tue","wen","thu","fry","sat"]
+week = ["sun","mon","tue","wed","thu","fri","sat"]
 
 # テストページ
 @app.route("/")
@@ -14,39 +14,37 @@ def index():
 # 設定した起きる時間を取得
 @app.route("/get_timer",methods=["GET"])
 def get_timer():
-    name = request.args.get("user")
+    user = request.args.get("user")
     with open(file,mode="r") as f:
         d = json.load(f)
-    return jsonify(d[name]["timer"])
+    return jsonify(d[user]["timer"])
 
 # 設定した起きる時間を変更
 @app.route("/put_timer", methods=["PUT"])
 def put_timer():
-    user = request.args.get("user")
     j = request.get_json()
-    time = j["time"]
-    timer = dict(zip(week, time))
+    user = j["user"]
+    timer = j["timer"]
     with open(file,mode="r") as f:
         d = json.load(f)
     d[user]["timer"]= timer
     with open(file,mode="w") as f:
         json.dump(d,f,indent=2)
-    return jsonify({"name":user,"week":timer})
+    return jsonify({"name":user,"timer":timer})
 
 # 今までの睡眠時間を確認
 @app.route("/get_sleep_time", methods=["GET"])
 def get_sleep_time():
-    name = request.args.get("user")
+    user = request.args.get("user")
     with open(file,mode="r") as f:
         d = json.load(f)
-    return jsonify(d[name]["sleep_times"])
+    return jsonify(d[user]["sleep_times"])
 
 # 今までの睡眠時間を記録
 @app.route("/post_sleep_time",methods=["POST"])
 def post_sleep_time():
     j = request.get_json()
-    time = j["time"]
-    time = int(time)
+    time = int(j["timer"])
     user = j["user"]
     dt = datetime.datetime.now()
     today = f"{dt.year}/{dt.month}/{dt.day}"
@@ -55,22 +53,22 @@ def post_sleep_time():
         d = json.load(f)
     if (today in d[user]["sleep_times"]):
         t = d[user]["sleep_times"][today]
-        time+=t
-    d[user]["sleep_times"][today] = time
+        timer+=t
+    d[user]["sleep_times"][today] = timer
     with open(file,mode="w") as f:
         json.dump(d,f,indent=2)
-    return jsonify({"user": user, "time":time})
+    return jsonify({"user": user, "time":timer})
 
 # 新しいアカウントを作成
 @app.route("/post_account", methods=["POST"])
 def post_account():
     j = request.get_json()
     user = j["user"]
-    time = j["time"]
+    time = j["timer"]
     mail = j["mail"]
-    timer = dict(zip(week, time))
+    timer = dict(zip(week, timer))
     new = {
-    user: 
+    user:
     {
         "address": mail,
         "timer": timer,

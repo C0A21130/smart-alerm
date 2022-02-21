@@ -5,9 +5,9 @@
       "sun": 500,
       "mon": 500,
       "tue": 500,
-      "wen": 500,
+      "wed": 500,
       "thu": 500,
-      "fry": 500,
+      "fri": 500,
       "sat": 500
     },
     "sleep_times": {
