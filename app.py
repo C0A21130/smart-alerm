@@ -1,4 +1,4 @@
-from flask import Flask,request,jsonify
+from flask import Flask,request,jsonify,render_template
 import json
 import pymongo
 import datetime
@@ -8,16 +8,22 @@ db_url = "mongodb+srv://test:testpass@cluster0.091dd.mongodb.net/myFirstDatabase
 file = "./data/data.json"
 week = ["sun","mon","tue","wed","thu","fri","sat"]
 
+# dbへ接続
 def get_db(user):
     client = pymongo.MongoClient(db_url)
     db = client.myFirstDatabase
     col = db[user]
     return col
 
-# テストページ
+# webからアクセス
 @app.route("/")
 def index():
-    return "<h1>HELLO Flask</h1>"
+    return render_template("index.html")
+
+# testページ
+@app.route("/test")
+def set_timer():
+    return "<h1>Hello Flask</h1>"
 
 # 設定した起きる時間を取得
 @app.route("/get_timer",methods=["GET"])
@@ -63,7 +69,6 @@ def post_sleep_time():
     d["sleep_times"][today] = time
     result = col.update_one({"user":user},{"$set":{"sleep_times":d["sleep_times"]}})
     return jsonify(d["sleep_times"])
-
 
 # 新しいアカウントを作成
 @app.route("/post_account", methods=["POST"])
