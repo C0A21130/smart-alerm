@@ -4,7 +4,7 @@ import pymongo
 import datetime
 
 app = Flask(__name__)
-db_url = "mongodb+srv://test:testpass@cluster0.091dd.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+db_url = ""
 file = "./data/data.json"
 week = ["sun","mon","tue","wed","thu","fri","sat"]
 
